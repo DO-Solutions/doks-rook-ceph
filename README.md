@@ -169,7 +169,7 @@ ceph df
 rados df
 ```
 
-### Deploy Dashboard
+#### Deploy Dashboard
 
 Ceph has a dashboard in which you can view the status of your cluster.
 
@@ -237,24 +237,24 @@ Before Rook can start provisioning storage, a StorageClass needs to be created b
 kubectl create -f deploy/examples/csi/cephfs/storageclass-doks.yaml
 ```
 
-# Consuming our new storage cluster
+## Consuming our new storage cluster
 
 Now we will create some Block Storage (RWO) PVCs and some Filesystem (RWX) PVCs and consume them using some test pods.
 
-## Create some Block Storage (RWO) PVCs
+### Create some Block Storage (RWO) PVCs
 
 ```
 kubectl apply -f deploy/examples/doks/pvc-ceph-block-1.yaml
 kubectl apply -f deploy/examples/doks/pvc-ceph-block-2.yaml
 ```
 
-## Create a Filesystem Storage (RWX) PVC
+### Create a Filesystem Storage (RWX) PVC
 
 ```
 kubectl apply -f deploy/examples/doks/pvc-ceph-fs-1.yaml
 ```
 
-### Check the status of our new PVCs
+#### Check the status of our new PVCs
 
 ```
 kubectl get pvc -l test=ceph
@@ -273,7 +273,7 @@ Now we'll create two pods.
 
 Pod `ceph-test-1` will mount PVC `ceph-block-pvc-1` as RWO at mountPath /rwo.
 
-Pod `ceph-test-1` will mount PVC `ceph-block-pvc-2` as RWO at mountPath /rwo.
+Pod `ceph-test-2` will mount PVC `ceph-block-pvc-2` as RWO at mountPath /rwo.
 
 Both pods mount PVC `ceph-filesystem-pvc` as RWX at mountPath /rwx
 

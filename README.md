@@ -269,27 +269,31 @@ ceph-filesystem-pvc     Bound    pvc-984cbc60-63cc-4b63-a7fd-2ac09254ef98   128M
 
 ## Create some Pods that consume the PVCs
 
-Now we'll create two pods.
+Now we'll create some pods.
 
 Pod `ceph-test-1` will mount PVC `ceph-block-pvc-1` as RWO at mountPath /rwo.
 
 Pod `ceph-test-2` will mount PVC `ceph-block-pvc-2` as RWO at mountPath /rwo.
 
-Both pods mount PVC `ceph-filesystem-pvc` as RWX at mountPath /rwx
+Pods from Deployment `ceph-test-pods` will all mount PVC `ceph-filesystem-pvc` as RWX at mountPath /rwx
 
 ```
 kubectl apply -f deploy/examples/doks/pod-rwo-rwx-1.yaml
 kubectl apply -f deploy/examples/doks/pod-rwo-rwx-2.yaml
+kubectl apply -f deploy/examples/doks/deploy-pods-rwx.yaml
 ```
 
-Check to see the pods have been created
+Check to see the pods have been created, we notice that Pods for Deployment `ceph-test-pods` all end up on different worker nodes.
 
 ```
-kubectl get pods -l test=ceph
+kubectl get pods -o wide
 
-NAME          READY   STATUS    RESTARTS   AGE
-ceph-test-1   1/1     Running   0          16s
-ceph-test-2   1/1     Running   0          15s
+NAME                              READY   STATUS    RESTARTS   AGE     IP             NODE              NOMINATED NODE   READINESS GATES
+ceph-test-1                       1/1     Running   0          20m     10.244.0.163   pool-apps-fcr0m   <none>           <none>
+ceph-test-2                       1/1     Running   0          20m     10.244.0.168   pool-apps-fcr0m   <none>           <none>
+ceph-test-pods-7dbd695fc9-bh8wz   1/1     Running   0          5m33s   10.244.0.40    pool-apps-fcr0q   <none>           <none>
+ceph-test-pods-7dbd695fc9-q6x6b   1/1     Running   0          5m33s   10.244.1.51    pool-apps-fcr07   <none>           <none>
+ceph-test-pods-7dbd695fc9-v9f7k   1/1     Running   0          5m33s   10.244.0.159   pool-apps-fcr0m   <none>           <none>
 ```
 
 Check that our PVCs attached correctly:
@@ -325,16 +329,22 @@ Events:
 
 ### Test the ReadWriteMany RWX storage
 
-Lets test our RWX storage by creating a file from Pod 1 and reading it from Pod 2
+Lets test our RWX storage by creating a file from Pod 1 and reading it from other Pods
 
 ```
 kubectl exec -it pod/ceph-test-1 -- touch /rwx/test
+kubectl exec -it pod/ceph-test-1 -- touch /rwx/test1
+kubectl exec -it pod/ceph-test-1 -- touch /rwx/test2
 ```
 
 ```
-kubectl exec -it pod/ceph-test-2 -- ls -l /rwx
-total 0
--rw-r--r--    1 root     root             0 Apr 26 09:24 test
+kubectl exec -it pod/ceph-test-pods-7dbd695fc9-bh8wz -- ls /rwx
+test  test1  test2
+```
+
+```
+kubectl exec -it pod/ceph-test-pods-7dbd695fc9-q6x6b -- ls /rwx
+test  test1  test2
 ```
 
 # Conclusion

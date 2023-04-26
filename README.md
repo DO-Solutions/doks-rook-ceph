@@ -162,12 +162,14 @@ All available tools in the toolbox are ready for your troubleshooting needs.
 
 Example:
 
+```
 ceph status
 ceph osd status
 ceph df
 rados df
+```
 
-### Deploy Dashboard
+### Deploy Dashboard
 
 Ceph has a dashboard in which you can view the status of your cluster.
 
@@ -252,7 +254,7 @@ kubectl apply -f deploy/examples/doks/pvc-ceph-block-2.yaml
 kubectl apply -f deploy/examples/doks/pvc-ceph-fs-1.yaml
 ```
 
-### Check the status of our new PVCs
+### Check the status of our new PVCs
 
 ```
 kubectl get pvc -l test=ceph

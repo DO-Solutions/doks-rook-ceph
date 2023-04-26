@@ -341,5 +341,6 @@ total 0
 
 *Need to re-write this part*
 
-We have created a Ceph storage cluster on a DigitalOcean DOKS cluster that uses PVCs to manage storage.
-The usage of volume mounts in your deployments with Ceph is now super-fast and rock-solid, because we do not have to attach physical disks to our worker nodes anymore. We just use the ones we have created during Rook cluster provisioning (remember these four 100GB disks?)! We minimized the amount of “physical attach/detach” actions on our nodes.
+* We have created a Ceph storage cluster on a DigitalOcean DOKS cluster that uses PVCs to manage storage.
+* The usage of volume mounts in your deployments with Ceph is now very fast because we do not have to attach physical disks to our worker nodes anymore.
+* Pods can shared storage mounts across nodes using Filesystem based RWX storage.

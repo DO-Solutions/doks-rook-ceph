@@ -275,7 +275,7 @@ Pod `ceph-test-1` will mount PVC `ceph-block-pvc-1` as RWO at mountPath /rwo.
 
 Pod `ceph-test-2` will mount PVC `ceph-block-pvc-2` as RWO at mountPath /rwo.
 
-Pods from Deployment `ceph-test-pods` will all mount PVC `ceph-filesystem-pvc` as RWX at mountPath /rwx
+All Pods including Pods from Deployment `ceph-test-pods` will mount PVC `ceph-filesystem-pvc` as RWX at mountPath /rwx
 
 ```
 kubectl apply -f deploy/examples/doks/pod-rwo-rwx-1.yaml

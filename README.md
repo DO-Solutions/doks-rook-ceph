@@ -282,6 +282,47 @@ kubectl apply -f deploy/examples/doks/pod-rwo-rwx-1.yaml
 kubectl apply -f deploy/examples/doks/pod-rwo-rwx-2.yaml
 ```
 
+Check to see the pods have been created
+
+```
+kubectl get pods -l test=ceph
+
+NAME          READY   STATUS    RESTARTS   AGE
+ceph-test-1   1/1     Running   0          16s
+ceph-test-2   1/1     Running   0          15s
+```
+
+Check that our PVCs attached correctly:
+
+```
+kubectl describe pod ceph-test-1
+```
+
+```
+Volumes:
+  ceph-block-is-rwo:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  ceph-block-pvc-1
+    ReadOnly:   false
+  ceph-filesystem-is-rwx:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  ceph-filesystem-pvc
+    ReadOnly:   false
+```
+ 
+```
+Events:
+  Type    Reason                  Age   From                     Message
+  ----    ------                  ----  ----                     -------
+  Normal  Scheduled               67s   default-scheduler        Successfully assigned default/ceph-test-1 to pool-apps-fcr0m
+  Normal  SuccessfulAttachVolume  67s   attachdetach-controller  AttachVolume.Attach succeeded for volume "pvc-aaf5e1a4-0503-4472-937b-cec2bf91f040"
+  Normal  SuccessfulAttachVolume  67s   attachdetach-controller  AttachVolume.Attach succeeded for volume "pvc-f98c1386-058d-4473-bdee-ee4f62c91ce5"
+  Normal  Pulling                 62s   kubelet                  Pulling image "nginx"
+  Normal  Pulled                  58s   kubelet                  Successfully pulled image "nginx" in 3.783008252s (3.783027468s including waiting)
+  Normal  Created                 58s   kubelet                  Created container volume-test
+  Normal  Started                 58s   kubelet                  Started container volume-test
+```
+
 ### Test the ReadWriteMany RWX storage
 
 Lets test our RWX storage by creating a file from Pod 1 and reading it from Pod 2

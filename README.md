@@ -185,7 +185,34 @@ echo 'your-password-here' > /tmp/test
 ceph dashboard ac-user-create admin -i /tmp/test administrator
 ```
 
-## Configure Rook / Ceph Storage
+## Expand Storage
+
+To increase the space available to your Rook / Ceph cluster simply:
+
+```
+kubectl -n rook-ceph edit CephCluster rook-ceph
+```
+
+Modify 
+
+```yaml
+  storage:
+    storageClassDeviceSets:
+      - name: set1
+        volumeClaimTemplates:
+          - metadata:
+              name: data
+            spec:
+              resources:
+                requests:
+                  `storage: 100Gi`
+              storageClassName: do-block-storage
+              volumeMode: Block
+              accessModes:
+                - ReadWriteOnce
+```
+
+## Configure Rook / Ceph Storage for consumption by Kubernetes
 
 Rook can expose three different types of storage to your Kubernetes cluster for consumption by your workloads. They are:
 
@@ -347,7 +374,55 @@ kubectl exec -it pod/ceph-test-pods-7dbd695fc9-q6x6b -- ls /rwx
 test  test1  test2
 ```
 
-# Conclusion
+## Benchmarks
+
+Benchmarks ran using [dbench](https://github.com/jkpedo/dbench/tree/doks)
+
+As you can see Ceph adds some overhead.
+
+### Native volume testing
+
+Below are the results of a `s-2vcpu-4gb-amd` worker node with a 1TB Volume attached using the `do-block-storage` storageClass
+
+```
+==================
+= Dbench Summary =
+==================
+Random Read/Write IOPS: 9986/9987. BW: 384MiB/s / 387MiB/s
+Average Latency (usec) Read/Write: 750.36/399.11
+Sequential Read/Write: 384MiB/s / 395MiB/s
+Mixed Random Read/Write IOPS: 7515/2471
+```
+
+### Ceph Block Storage testing
+
+Below are the results of a s-2vcpu-4gb-amd worker node with a 1TB Volume attached using the `rook-ceph-block` storageClass
+
+```
+==================
+= Dbench Summary =
+==================
+Random Read/Write IOPS: 9333/2556. BW: 222MiB/s / 164MiB/s
+Average Latency (usec) Read/Write: 1410.50/
+Sequential Read/Write: 235MiB/s / 204MiB/s
+Mixed Random Read/Write IOPS: 3648/1218
+```
+
+### Ceph File Storage testing
+
+Below are the results of a s-2vcpu-4gb-amd worker node with a 1TB Volume attached using the `rook-cephfs` storageClass
+
+```
+==================
+= Dbench Summary =
+==================
+Random Read/Write IOPS: 6844/2187. BW: 229MiB/s / 153MiB/s
+Average Latency (usec) Read/Write: 2202.73/
+Sequential Read/Write: 234MiB/s / 218MiB/s
+Mixed Random Read/Write IOPS: 2610/876
+```
+
+## Conclusion
 
 *Need to re-write this part*
 

@@ -378,7 +378,7 @@ test  test1  test2
 
 Benchmarks ran using [dbench](https://github.com/jkpedo/dbench/tree/doks)
 
-As you can see Ceph adds some overhead.
+DigitalOcean Volume limits are [detailed here](https://docs.digitalocean.com/products/volumes/details/limits/)
 
 ### Native volume testing
 

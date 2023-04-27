@@ -205,7 +205,7 @@ Modify
             spec:
               resources:
                 requests:
-                  `storage: 100Gi`
+                  storage: 100Gi
               storageClassName: do-block-storage
               volumeMode: Block
               accessModes:
@@ -396,7 +396,7 @@ Mixed Random Read/Write IOPS: 7515/2471
 
 ### Ceph Block Storage testing
 
-Below are the results of a s-2vcpu-4gb-amd worker node with a 1TB Volume attached using the `rook-ceph-block` storageClass
+Below are the results of a `s-2vcpu-4gb-amd` worker node with a 1TB Volume attached using the `rook-ceph-block` storageClass
 
 ```
 ==================
@@ -410,7 +410,7 @@ Mixed Random Read/Write IOPS: 3648/1218
 
 ### Ceph File Storage testing
 
-Below are the results of a s-2vcpu-4gb-amd worker node with a 1TB Volume attached using the `rook-cephfs` storageClass
+Below are the results of a `s-2vcpu-4gb-amd` worker node with a 1TB Volume attached using the `rook-cephfs` storageClass
 
 ```
 ==================

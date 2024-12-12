@@ -1,3 +1,9 @@
+**This repository has been archived.**
+
+While this guide can still be used to achieve ReadWriteMany (RWX) functionality on DigitalOcean Kubernetes (DOKS), please note that DigitalOcean Block Storage is built on top of Ceph. Adding another Ceph layer can negatively impact performance and result in unnecessary data duplication, as DigitalOcean volumes are already triple-replicated and highly reliable.
+
+For a more efficient alternative, we recommend exploring the [OpenEBS NFS Provisioner](https://marketplace.digitalocean.com/apps/openebs-nfs-provisioner) available in the DigitalOcean Marketplace.
+
 # Running Rook / Ceph on DigitalOcean DOKS (Managed Kubernetes)
 
 ## About this guide
